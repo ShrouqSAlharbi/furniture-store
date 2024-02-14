@@ -1,9 +1,9 @@
 <template>
-    <div class="relative">
-      <div class="flex justify-between items-center">
-        <button class="py-2 px-16 border-2 border-gray-600 font-bold text-gray-600 hover:bg-gray-400 hover:text-white hover:shadow-lg" @click="showFilter = !showFilter">Filter</button>
+    <div class="relative ">
+      <div class="flex justify-between items-center gap-2 ">
+        <button class="py-2 px-4 md:px-16 border-2 border-stone-600 font-bold text-stone-600 hover:bg-stone-400 hover:text-white hover:shadow-lg" @click="showFilter = !showFilter">Filter</button>
   
-        <select @change="updateSorting($event.target.value)" class="py-2 px-2 border-2 border-gray-600" name="" id="">
+        <select @change="updateSorting($event.target.value)" class="py-2 px-4 md:px-16 border-2 border-stone-600" name="" id="">
           <option value="default">Default Sorting</option>
           <option value="latest">Sort By Latest</option>
           <option value="lowToHigh">Sort By Price: Low To High</option>
@@ -20,10 +20,12 @@
       <h3 class="mb-5 text-xl">Filter by price</h3>
       <!-- filter by price code -->
       <label for="min-price" class="block mb-2 text-gray-900 dark:text-white">Minimum Price</label>
-      <input id="min-price" type="number" min="0" v-model="minPrice" class="w-full py-2 px-3 border border-gray-400 rounded-md mb-4">
+      <input  id="min-price" type="number" min="0" v-model="minPrice" class="w-full py-2 px-3 border border-gray-400 rounded-md mb-4">
 
       <label for="max-price" class="block mb-2 text-gray-900 dark:text-white">Maximum Price</label>
-      <input id="max-price" type="number" min="0" v-model="maxPrice" class="w-full py-2 px-3 border border-gray-400 rounded-md mb-4">
+      <input  id="max-price" type="number" min="0" v-model="maxPrice" class="w-full py-2 px-3 border border-gray-400 rounded-md mb-4">
+
+      <button  >Resort Products</button>
       <!-- filter by price code -->
 
       <!-- CATEGORY IN THE FILTER -->
@@ -45,14 +47,19 @@
   </template>
   
   <script>
+  
   export default {
     data: () => ({
-      showFilter: false
+      showFilter: false,
+      minPrice: null,
+      maxPrice: null
     }),
     methods: {
     updateSorting(sortOption) {
       this.$emit('sort-change', sortOption); // Emit event to parent component
-    }
-  }
+    },
+
+  },
+
   };
   </script>

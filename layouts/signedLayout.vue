@@ -5,17 +5,18 @@
         <header>
             <div class="flex justify-between items-center py-10 px-10 font-bold">
                 <div class="flex gap-5 justify-center items-center uppercase">
-                    <nuxt-link to="/"><img class=" w-52" src="https://websitedemos.net/furniture-store-02/wp-content/uploads/sites/155/2018/01/logo06@2x-free-img.png" alt=""></nuxt-link>
-                    <nuxt-link to="/products">All Products</nuxt-link>
-                    <nuxt-link to="/products/sofa">Sofa</nuxt-link>
-                    <nuxt-link to="/products/chair">Chair</nuxt-link>
-                    <nuxt-link to="/products/table">Table</nuxt-link>
+                    <nuxt-link to="/signed"><img class=" w-52" src="https://websitedemos.net/furniture-store-02/wp-content/uploads/sites/155/2018/01/logo06@2x-free-img.png" alt=""></nuxt-link>
+                    <nuxt-link class="hover:text-stone-500" to="/signed/products">All Products</nuxt-link>
+                    <nuxt-link class="hover:text-stone-500" to="/signed/sofa">Sofa</nuxt-link>
+                    <nuxt-link class="hover:text-stone-500" to="/signed/chair">Chair</nuxt-link>
+                    <nuxt-link class="hover:text-stone-500" to="/signed/table">Table</nuxt-link>
                 </div>
 
 
                 <div class="flex justify-center items-center gap-5 uppercase">
-                <nuxt-link to="">About Us</nuxt-link>
-                <button  @click.prevent="signOut">Sign Out</button>
+                <nuxt-link class="hover:text-stone-500" to="/signed/aboutus">About Us</nuxt-link>
+                <nuxt-link class="hover:text-stone-500" to="/signed/myaccount">My Account</nuxt-link>
+                <button class="hover:text-stone-500"  @click.prevent="signOut">Sign Out</button>
                 <div class="cursor-pointer relative" @click="showCart = !showCart">
                     <div class=" absolute -top-3 -right-2 rounded-full bg-gray-400 w-5 h-5 flex justify-center items-center  shadow-xl">{{ cartLength }}</div>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 22 22" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
@@ -35,7 +36,7 @@
                     <ul class="flex justify-start flex-col items-start gap-5 w-full row-span-4 overflow-y-auto mb-10 ">
                       <li class="relative flex w-full justify-start gap-5 items-center border-t-2 border-b  border-gray-500" v-for="item in combinedCart" :key="item.id">
                           <div class="flex justify-start items-center gap-3 ">
-                              <img class="w-20" :src="item.image" alt="">
+                              <img class="w-20" :src="getImageUrl(item.image)" alt="">
                               <div class="flex flex-col gap-3">
                                 <p>{{ item.name }}</p>
                                 <p>£{{ item.price }}</p>
@@ -51,7 +52,7 @@
                   </ul>
                     <!-- end items in the storage -->
                     <div class="flex flex-col justify-center items-center gap-2  h-2/12 mt-3 ">
-                      <nuxt-link to="cart" @click="showCart = false">
+                      <nuxt-link to="cart">
                         <button  class="border-2 border-gray-400 px-20 py-3 text-gray-600 hover:bg-slate-600 hover:text-white">View Cart</button>
                       </nuxt-link>  
   
@@ -79,6 +80,7 @@
 </template>
 
 <script>
+import {  mapGetters } from 'vuex';
 export default {
   data() {
     return {
@@ -86,6 +88,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(['getImageUrl']),
     combinedCart() {
       const combinedItems = {};
 

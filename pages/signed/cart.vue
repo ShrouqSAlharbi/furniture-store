@@ -58,8 +58,9 @@
   </template>
   
   <script>
-    import {  mapGetters } from 'vuex';
+  import {  mapGetters } from 'vuex';
   export default {
+    layout: 'signedLayout',
     computed: {
       ...mapGetters(['getImageUrl', 'products']),
       // Retrieve cart from Vuex store
@@ -90,20 +91,110 @@
     },
     // Calculate total
     calculateTotal() {
-      return this.calculateSubtotal() + 4.99; // Add shipping fee
+      return +(this.calculateSubtotal() + 4.99); // Add shipping fee
     },
     // Method to handle checkout
-    checkout() {
-      if (!!localStorage.getItem('session')) {
-        // If session exists, navigate to checkout page
-        alert('Your Order Has been Sent Successfully.')
-        this.$router.push('/signed');
-      } else {
-        // If session is null or empty, navigate to sign-in page
-        this.$router.push('/signup');
-      }
-    },
+
+
+    async checkout() {
+  try {
+    if(this.$store.state.cart == null || this.$store.state.cart ==''){
+      alert('You Can\'t Checkout When The Cart Is Empty')
+      return; // Stop execution if the cart is empty
     }
+    // Check if user is authenticated
+    const userData = JSON.parse(localStorage.getItem('session'));
+
+
+    if (!userData || !userData.id) {
+      console.error('Invalid session data or missing user ID. Redirecting to sign-in page.');
+      this.$router.push('/signin');
+      return;
+    }
+
+    // Get the user's ID from session
+    const userId = userData.id;
+
+    // Fetch user details from the backend based on the ID
+    const { data: user, error: userError } = await this.$supabase
+      .from('users')
+      .select('id, FullName, Address, Phone')
+      .eq('id', userId)
+      .single();
+
+    if (userError) {
+      throw new Error(`Failed to fetch user details: ${userError.message}`);
+    }
+
+    // Calculate the total amount as an integer (assuming no decimal precision is needed)
+    const totalAmount = Math.round(this.calculateTotal() * 100); // Convert to cents
+
+    // Create the order in the "orders" table
+    const { data: order, error: orderError } = await this.$supabase
+  .from('orders')
+  .insert({
+    OrderDate: new Date(),
+    CustomerID: userId, // Using the user's ID from session
+    TotalAmount: totalAmount,
+    ShippingAddress: user.Address, // Assuming the user's address is available
+    // Additional columns...
+  })
+  .single().select();
+
+  console.log(order);
+
+      
+
+    if (orderError) {
+      throw new Error(`Failed to create order: ${orderError.message}`);
+    }
+
+    // Check if the order object is null or undefined
+if (!order) {
+  throw new Error('Order object is null or undefined');
+}
+
+    // Get the OrderID from the created order
+    const OrderID = order.OrderID;
+    console.log('OrderID'+ OrderID);
+
+    // Use the retrieved order ID to create order items in the "order-items" table
+    const orderItems = this.cart.map(item => ({
+      OrderID: OrderID, // Use the order ID from the response directly
+      ProductID: item.id,
+      Quantity: item.quantity,
+      PricePerUnit: Math.round(item.price * 100), 
+      created_at: new Date()
+    }));
+
+    const { error: orderItemsError } = await this.$supabase
+      .from('orders-items')
+      .insert(orderItems);
+
+    if (orderItemsError) {
+      throw new Error(`Failed to add order items: ${orderItemsError.message}`);
+    }
+
+    // Clear the cart after successful checkout
+    this.$store.commit('clearCart');
+    alert('Thank You For Choosing Us ...')
+
+    // Redirect the user to a thank you page
+    this.$router.push('/signed');
+  } catch (error) {
+    console.error('Error during checkout:', error);
+    alert('Error during checkout. Please try again.');
+  }
+}
+
+
+
+
+
+
+
+    }
+
   };
   </script>
   

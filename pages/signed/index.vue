@@ -1,12 +1,8 @@
 <template>
-    <div>
-        <p>GG</p>
-        
-    </div>
+  <homePage />
 </template>
 <script>
 export default {
-    layout: 'signedLayout'
-    
+  layout: 'signedLayout',
 }
 </script>

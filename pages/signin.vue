@@ -1,14 +1,16 @@
 <template>
-    <div>
-      <h1>Sign In</h1>
-      <form @submit="submitForm">
-        <label for="Email">Email:</label>
-        <input type="text" v-model="Email" id="Email" required>
-        <br>
-        <label for="password">Password:</label>
-        <input type="password" v-model="password" id="password" required>
-        <br>
-        <button type="submit">Sign In</button>
+    <div class="flex justify-center items-center flex-col gap-4 border-[0.25px] py-10 shadow-lg">
+      <h1 class="font-bold text-xl mb-10">Sign In</h1>
+      <form @submit="submitForm" class="flex justify-center items-center gap-8 flex-col w-full">
+        <div  class="w-full flex justify-center items-center">
+        <input 
+        class="border-[0.25px] border-stone-700 rounded-md px-2 py-1 w-3/12"
+         type="text" v-model="Email" id="Email" placeholder="Email" required>
+        </div>
+        <div class="w-full flex justify-center items-center">
+        <input class="border-[0.25px] border-stone-700 rounded-md px-2 py-1 w-3/12" placeholder="Password" type="password" v-model="password" id="password" required>
+      </div>
+        <button class="mt-5 flex justify-center py-2 px-10 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" type="submit">Sign In</button>
       </form>
     </div>
   </template>
@@ -29,21 +31,20 @@ export default {
   try {
     const { data, error } = await this.$supabase
           .from('users')
-          .select('Email, Password')
+          .select('Email, Password , id')
           .eq('Email', this.Email)
           .eq('Password', this.password) // Check both email and password
           .single();
 
 
     if (error) {
-      console.error('Error signing in:', error.message);
+      alert('Invalid Email or password.')
     } else if (!data) {
-      console.error('Invalid Email or password.');
+      alert('Invalid Email or password.')
     } else {
-      console.log('User signed in successfully:', JSON.stringify(data));
-      localStorage.setItem('session', data);
+      localStorage.setItem('session', JSON.stringify({ id: data.id }));
 
-      this.$router.push('/cart');
+      this.$router.push('/signed/cart');
     }
   } catch (error) {
     console.error('Error signing in:', error.message);

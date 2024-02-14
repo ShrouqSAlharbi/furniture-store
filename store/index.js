@@ -5,9 +5,11 @@ export const state = () => ({
     filteredProducts: [],
     sortBy: 'price',
     sortOrder: 'asc',
-
   })
   export const mutations = {
+    clearCart(state) {
+      state.cart = [];
+    },
     setProducts(state, products) {
       state.products = products
     },
@@ -61,28 +63,54 @@ export const state = () => ({
         item.quantity--; // Increment quantity by 1
       }
     },
-
+    addToCart2(state, { product, quantity }) {
+      const existingProductIndex = state.cart.findIndex(item => item.id === product.id);
     
+      if (existingProductIndex !== -1) {
+        // If the product already exists in the cart, update its quantity
+        state.cart[existingProductIndex].quantity += quantity;
+      } else {
+        // If the product does not exist in the cart, add it with the specified quantity
+        state.cart.push({ ...product, quantity });
+      }
+    }
   }
 
   export const actions = {
-    async fetchProducts({ commit }) {
-      const { data, error } = await this.$supabase.from("products").select("*");
-      if (error) {
-        commit("setError", error);
-      } else {
-        for (const product of data) {
-          const { data: imageData, error: imageError } = await this.$supabase
-            .storage.from("products")
-            .download(product.image);
-        
-            product.image = URL.createObjectURL(imageData);
-          
-        }
-        commit("setProducts", data);
-      }
-    },
     setFilteredProducts({ commit }, section) {
       commit("setFilteredProducts", section);
     },
+
+      async fetchProducts({ commit }) {
+        try {
+          const { data, error } = await this.$supabase.from('products').select('*');
+    
+          if (error) {
+            throw new Error('Error fetching products: ' + error.message);
+          }
+    
+          commit('setProducts', data);
+        } catch (error) {
+          console.error(error.message);
+        }
+      },
+
+      clearCart({ commit }) {
+        commit('clearCart');
+      }
   }
+
+  export const getters = {
+    products: state => state.products,
+    getImageUrl: state => imageData => {
+      try {
+        const imageUrl = JSON.parse(imageData).data.publicUrl;
+        return imageUrl;
+      } catch (error) {
+        console.error('Error parsing image data:', error.message);
+        return '';
+      }
+    },
+    cart: state => state.cart,
+  };
+

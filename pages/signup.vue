@@ -104,7 +104,7 @@
       if (error) {
         console.error('Error inserting user:', error);
       } else {
-        console.log('User inserted successfully:', data);
+        alert('Your Account Has Been Created Successfully ...')
         // Redirect to sign-in page
         this.$router.push('/signin');
       }

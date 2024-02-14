@@ -27,17 +27,17 @@
         
 
 
-        <div class="flex justify-center items-center py-20">
-            <div class="grid grid-cols-4 gap-28">
-                <div class="flex justify-start items-start flex-col gap-2">
+        <div class="flex justify-center items-center px-10 flex-col py-20">
+            <div class="grid md:grid-cols-4 gap-10 md:gap-28">
+                <div class="flex items-center justify-start md:items-start flex-col gap-2">
                     <p class="text-xl">Product Links</p>
                     <nuxt-link class=" text-stone-400" to="/products">All Products</nuxt-link>
-                    <nuxt-link class=" text-stone-400" to="#">Sofa</nuxt-link>
-                    <nuxt-link class=" text-stone-400" to="#">Chair</nuxt-link>
-                    <nuxt-link class=" text-stone-400" to="#">Table</nuxt-link>
+                    <nuxt-link class=" text-stone-400" to="/products/sofa">Sofa</nuxt-link>
+                    <nuxt-link class=" text-stone-400" to="/products/chair">Chair</nuxt-link>
+                    <nuxt-link class=" text-stone-400" to="/products/table">Table</nuxt-link>
                 </div>
 
-                <div class="flex justify-start items-start flex-col gap-2">
+                <div class="flex items-center justify-start md:items-start flex-col gap-2">
                     <p class="text-xl">Chairs</p>
                     <nuxt-link class=" text-stone-400" to="#">Chair</nuxt-link>
                     <nuxt-link class=" text-stone-400" to="#">Armchair</nuxt-link>
@@ -45,7 +45,7 @@
                     <nuxt-link class=" text-stone-400" to="#">Stool</nuxt-link>
                 </div>
 
-                <div class="flex justify-start items-start flex-col gap-2">
+                <div class="flex items-center justify-start md:items-start flex-col gap-2">
                     <p class="text-xl">Table</p>
                     <nuxt-link class=" text-stone-400" to="#">Study table</nuxt-link>
                     <nuxt-link class=" text-stone-400" to="#">Table</nuxt-link>
@@ -59,7 +59,7 @@
             </div>
         </div>
 
-        <div class="h-40 bg-stone-800 flex justify-between items-start py-4 px-10">
+        <div class="h-40 bg-stone-800 flex  flex-col justify-end items-center py-4 px-2 md:flex-row md:justify-between md:px-10 md:items-start ">
             <p class="text-white">Copyright © 2024 Furniture Store</p>
             <p class="text-white">Powered by Furniture Store</p>
         </div>
