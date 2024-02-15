@@ -17,15 +17,23 @@
           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
         </svg>
       </div>
+
+      <!-- filter by search -->
+      <div class="">
+        <!-- Search input -->
+        <input type="text"  @change="updateSearch($event.target.value)" v-model="searchQuery" placeholder="Search by name" class="w-full py-2 px-3 border border-gray-400 rounded-md mb-4">
+
+      </div>
+
       <h3 class="mb-5 text-xl">Filter by price</h3>
       <!-- filter by price code -->
       <label for="min-price" class="block mb-2 text-gray-900 dark:text-white">Minimum Price</label>
-      <input  id="min-price" type="number" min="0" v-model="minPrice" class="w-full py-2 px-3 border border-gray-400 rounded-md mb-4">
+      <input  id="min-price"  type="number" min="0" v-model="minPrice" class="w-full py-2 px-3 border border-gray-400 rounded-md mb-4">
 
       <label for="max-price" class="block mb-2 text-gray-900 dark:text-white">Maximum Price</label>
       <input  id="max-price" type="number" min="0" v-model="maxPrice" class="w-full py-2 px-3 border border-gray-400 rounded-md mb-4">
 
-      <button  >Resort Products</button>
+      <button  @click="filterProducts" class="py-2 my-2 px-4 border-2 border-white font-bold text-stone-600 hover:bg-stone-400 hover:text-white hover:shadow-lg">Resort Products</button>
       <!-- filter by price code -->
 
       <!-- CATEGORY IN THE FILTER -->
@@ -47,19 +55,26 @@
   </template>
   
   <script>
-  
+
   export default {
     data: () => ({
       showFilter: false,
       minPrice: null,
-      maxPrice: null
+      maxPrice: null,
+      searchQuery: '',
     }),
+
     methods: {
-    updateSorting(sortOption) {
-      this.$emit('sort-change', sortOption); // Emit event to parent component
+      updateSorting(sortOption) {
+        this.$emit('sort-change', sortOption); // Emit event to parent component
+      },
+      updateSearch(searchQuery) {
+        this.$emit('updateSearch', searchQuery); // Emit the search query
+      },
+      filterProducts() {
+      // Emit minPrice and maxPrice to the parent component
+      this.$emit('filter-products', { minPrice: this.minPrice, maxPrice: this.maxPrice });
+      }
     },
-
-  },
-
   };
   </script>

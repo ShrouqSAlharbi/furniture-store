@@ -12,10 +12,13 @@
     "lintfix": "prettier --write --list-different ."
   },
   "dependencies": {
+    "@nuxtjs/auth": "^4.9.1",
     "@nuxtjs/axios": "^5.13.6",
     "@supabase/supabase-js": "^2.39.3",
     "@websanova/vue-auth": "^4.2.1",
+    "connect-redis": "^7.1.1",
     "core-js": "^3.25.3",
+    "jsonwebtoken": "^9.0.2",
     "nuxt": "^2.15.8",
     "vue": "^2.7.10",
     "vue-auth": "^1.0.0-alpha.1",

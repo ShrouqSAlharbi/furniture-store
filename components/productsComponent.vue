@@ -1,9 +1,9 @@
 <template>
     <div>
-      <filters @sort-change="sortProducts" ></filters>
+      <filters @sort-change="sortProducts" @updateSearch="updateSearch" @filter-products="filterProducts"></filters>
       <div class="py-10">
         <ul class="grid grid-cols-4 gap-5">
-          <li class="my-5 overflow-hidden" v-for="product in sortedProducts" :key="product.id">
+          <li class="my-5 overflow-hidden" v-for="product in filteredAndSortedProducts" :key="product.id">
             <div class="overflow-hidden w-[350px] relative">
                 <img class="w-[330px] h-[330px] hover:scale-110 transition-transform duration-300"  :src="getImageUrl(product.image)">
                 <!-- ADD PRODUCT TO CART-->
@@ -39,7 +39,8 @@
   export default {
     data() {
       return {
-        sortBy: 'default' // Initialize sortBy with 'default',
+        sortBy: 'default', // Initialize sortBy with 'default'
+        searchQuery: ''
       };
     },
     computed: {
@@ -48,26 +49,36 @@
     },
 
       ...mapGetters(['getImageUrl', 'products']),
-      sortedProducts() {
-        let sortedProducts = [...this.products]; // Create a copy of products array
-  
-        // Apply sorting to sortedProducts
-        switch (this.sortBy) {
-          case 'latest':
-            // No sorting needed as products are already in the desired order
-            break;
-          case 'highToLow':
-            sortedProducts.sort((a, b) => b.price - a.price);
-            break;
-          case 'lowToHigh':
-            sortedProducts.sort((a, b) => a.price - b.price);
-            break;
-          default:
-            break;
-        }
-  
-        return sortedProducts;
+      filteredAndSortedProducts() {
+        
+    let filteredProducts = this.products.filter(product => {
+      return product.name.toUpperCase().includes(this.searchQuery.toUpperCase());
+    });
+
+     // Apply filtering based on price range
+     if (this.minPrice !== null && this.maxPrice !== null) {
+        filteredProducts = filteredProducts.filter(product => {
+          return product.price >= this.minPrice && product.price <= this.maxPrice;
+        });
       }
+
+    // Apply sorting to filtered products
+    switch (this.sortBy) {
+      case 'latest':
+        // No sorting needed as products are already in the desired order
+        break;
+      case 'highToLow':
+        filteredProducts.sort((a, b) => b.price - a.price);
+        break;
+      case 'lowToHigh':
+        filteredProducts.sort((a, b) => a.price - b.price);
+        break;
+      default:
+        break;
+    }
+
+    return filteredProducts;
+  }
     },
     async created() {
       await this.fetchProducts();
@@ -80,6 +91,14 @@
       sortProducts(sortOption) {
         this.sortBy = sortOption; // Update sortBy with the selected option
       },
+      updateSearch(searchQuery) {
+        this.searchQuery = searchQuery;
+      },
+      filterProducts(filterData) {
+      // Handle filtering based on minPrice and maxPrice emitted from filters component
+      this.minPrice = filterData.minPrice;
+      this.maxPrice = filterData.maxPrice;
+    }
 
 
     },
@@ -87,6 +106,14 @@
     signed: {
       type: Boolean,
       required: true,
+    },
+    minPrice: {
+      type: Number,
+      default: null,
+    },
+    maxPrice: {
+      type: Number,
+      default: null,
     },
   },
   };

@@ -30,19 +30,20 @@ export default {
 
   try {
     const { data, error } = await this.$supabase
-          .from('users')
-          .select('Email, Password , id')
-          .eq('Email', this.Email)
-          .eq('Password', this.password) // Check both email and password
-          .single();
+      .from('users')
+      .select('Email, Password, id')
+      .eq('Email', this.Email)
+      .eq('Password', this.password) // Check both email and password
+      .single();
 
 
-    if (error) {
-      alert('Invalid Email or password.')
-    } else if (!data) {
-      alert('Invalid Email or password.')
+    if (error || !data) {
+      alert('Invalid Email or password.');
     } else {
-      localStorage.setItem('session', JSON.stringify({ id: data.id }));
+
+
+      // Store the token and user ID in localStorage
+      localStorage.setItem('session', JSON.stringify({  id: data.id }));
 
       this.$router.push('/signed/cart');
     }
@@ -50,6 +51,7 @@ export default {
     console.error('Error signing in:', error.message);
   }
 }
+
 
   },
 
